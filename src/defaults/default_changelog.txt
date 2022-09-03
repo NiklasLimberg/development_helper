@@ -1,0 +1,25 @@
+---
+title: ${title}
+issue: ${issue}
+flag:
+author: ${author}
+author_email: ${author_email}
+author_github: ${author_github}
+---
+# Core
+*  
+___
+# API
+*  
+___
+# Administration
+*  
+___
+# Storefront
+*  
+___
+# Upgrade Information
+## Topic 1
+### Topic 1a
+### Topic 1b
+## Topic 2
