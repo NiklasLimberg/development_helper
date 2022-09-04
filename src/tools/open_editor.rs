@@ -1,4 +1,4 @@
-use std::{process::Command, env::var};
+use std::{env::var, process::Command};
 
 // todo parse editor from config
 pub fn open(file_path: &str) {

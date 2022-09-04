@@ -31,12 +31,9 @@ pub fn run(issue_key: &String, title: &String) {
     println!("Creating changelog");
 
     let changelog_path = get_filepath_for_changelog(&formatted_title);
-    
-    fs::write(
-        &changelog_path,
-        get_changelog_content(title, issue_key),
-    )
-    .expect("Unable to write changelog file");
+
+    fs::write(&changelog_path, get_changelog_content(title, issue_key))
+        .expect("Unable to write changelog file");
 
     editor::open(&changelog_path);
 
@@ -46,7 +43,11 @@ pub fn run(issue_key: &String, title: &String) {
         title.to_lowercase().replace(" ", "-")
     ));
 
-    git_wrapper::create_commit(format!("{} - {}", issue_key, title));
+    if git_wrapper::get_staged_file_names().len() == 0 {
+        println!("Skipping creating a commit. No staged files to commit");
+    } else {
+        git_wrapper::create_commit(format!("{} - {}", issue_key, title));
+    }
 }
 
 fn get_filepath_for_changelog(formatted_title: &String) -> String {

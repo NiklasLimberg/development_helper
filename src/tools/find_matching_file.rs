@@ -2,8 +2,6 @@ use log::warn;
 use regex::Regex;
 use walkdir::WalkDir;
 
-// use regex::Regex;
-// let regex = Regex::new("issue: *NEXT-22338").unwrap();
 
 pub fn find_matching_files(path: &str, regex: Regex) -> Vec<String> {
     let mut matching_files: Vec<String> = Vec::new();

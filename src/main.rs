@@ -2,14 +2,11 @@ use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
 
-
 #[macro_use]
 extern crate serde_derive;
 
-
 #[path = "commands/prepare_pr.rs"]
 mod prepare_pr;
-
 
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None,  )]
@@ -53,9 +50,7 @@ fn main() {
     }
 
     match &cli.command {
-        Some(Commands::Create { id, title }) => {
-           prepare_pr::run(id, title)
-        }
+        Some(Commands::Create { id, title }) => prepare_pr::run(id, title),
         None => {}
     }
 }

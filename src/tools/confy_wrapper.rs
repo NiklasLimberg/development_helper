@@ -8,7 +8,6 @@ pub struct AppConfig {
     pub author_github: String,
 }
 
-/// `MyConfig` implements `Default`
 impl ::std::default::Default for AppConfig {
     fn default() -> Self {
         Self {
