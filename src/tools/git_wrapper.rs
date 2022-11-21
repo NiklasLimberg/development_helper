@@ -35,6 +35,14 @@ pub fn get_staged_file_names() -> Vec<String> {
     return lines;
 }
 
+pub fn add_file(file_path: &String) {
+    Command::new("git")
+        .args(["add", file_path])
+        .status()
+        .expect("Could not stage file");
+    print!("Staged file: {}", file_path)
+}
+
 pub fn create_commit(commit_msg: String) {
     Command::new("git")
         .args(["commit", "-m", &commit_msg])

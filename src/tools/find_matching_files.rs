@@ -30,6 +30,9 @@ pub fn find_matching_files(path: &str, regex: Regex) -> Vec<String> {
             continue;
         }
 
+        print!("FOUND A FILE");
+
+
         match file_path.to_str() {
             Some(path) => matching_files.push(path.to_owned()),
             None => warn!(

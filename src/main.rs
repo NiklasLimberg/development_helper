@@ -5,8 +5,14 @@ use clap::{Parser, Subcommand};
 #[macro_use]
 extern crate serde_derive;
 
+#[path = "commands/setup.rs"]
+mod setup;
+
 #[path = "commands/prepare_pr.rs"]
 mod prepare_pr;
+
+#[path = "commands/open_changelog.rs"]
+mod open_changelog;
 
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None,  )]
@@ -26,6 +32,10 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    
+    /// Changes the config of the tool
+    Setup {},
+
     /// Creates a branch, a commit, and a changelog
     Create {
         /// Ticket id
@@ -36,6 +46,8 @@ enum Commands {
         #[clap(short, long, action)]
         title: String,
     },
+
+    EditChangelog {}
 }
 
 fn main() {
@@ -50,7 +62,9 @@ fn main() {
     }
 
     match &cli.command {
+        Some(Commands::Setup {  }) => setup::run(),
         Some(Commands::Create { id, title }) => prepare_pr::run(id, title),
+        Some(Commands::EditChangelog {  }) => open_changelog::run(),
         None => {}
     }
 }

@@ -1,5 +1,5 @@
 use regex::Regex;
-use std::{fs, process};
+use std::{fs, path::Path, process};
 
 use chrono::{self, Datelike};
 
@@ -26,22 +26,43 @@ pub fn run(issue_key: &String, title: &String) {
         process::exit(exitcode::USAGE);
     };
 
-    let formatted_title = trim_whitespace(&title).to_lowercase();
+    let formatted_title = trim_whitespace(&title).to_lowercase().replace(" ", "-");
 
     println!("Creating changelog");
 
     let changelog_path = get_filepath_for_changelog(&formatted_title);
 
-    fs::write(&changelog_path, get_changelog_content(title, issue_key))
-        .expect("Unable to write changelog file");
+    let mut write_changelog = true;
 
-    editor::open(&changelog_path);
+    if Path::new(&changelog_path).is_file() {
+        println!(
+            "A changelog with the path {} already exists!",
+            changelog_path
+        );
+        match dialoguer::Confirm::new()
+            .with_prompt("Do you want to overwrite the existing file?")
+            .default(false)
+            .show_default(true)
+            .interact()
+        {
+            Ok(value) => write_changelog = value,
+            Err(..) => {
+                write_changelog = false;
+                println!("Could not get answer keeping the current file")
+            }
+        }
+    };
 
-    git_wrapper::create_branch(format!(
-        "{}/{}",
-        issue_key.to_lowercase(),
-        title.to_lowercase().replace(" ", "-")
-    ));
+    if write_changelog {
+        fs::write(&changelog_path, get_changelog_content(title, issue_key))
+            .expect("Unable to write changelog file");
+
+        editor::open(&changelog_path);
+
+        git_wrapper::add_file(&changelog_path);
+    }
+
+    git_wrapper::create_branch(format!("{}/{}", issue_key.to_lowercase(), formatted_title));
 
     if git_wrapper::get_staged_file_names().len() == 0 {
         println!("Skipping creating a commit. No staged files to commit");
