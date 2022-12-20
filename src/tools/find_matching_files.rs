@@ -2,7 +2,6 @@ use log::warn;
 use regex::Regex;
 use walkdir::WalkDir;
 
-
 pub fn find_matching_files(path: &str, regex: Regex) -> Vec<String> {
     let mut matching_files: Vec<String> = Vec::new();
 
@@ -32,13 +31,9 @@ pub fn find_matching_files(path: &str, regex: Regex) -> Vec<String> {
 
         print!("FOUND A FILE");
 
-
         match file_path.to_str() {
             Some(path) => matching_files.push(path.to_owned()),
-            None => warn!(
-                "Path {} is not valid UTF-8",
-                file_path.display()
-            )
+            None => warn!("Path {} is not valid UTF-8", file_path.display()),
         }
     }
 

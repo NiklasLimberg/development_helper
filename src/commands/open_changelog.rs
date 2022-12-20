@@ -12,9 +12,7 @@ mod matching_files;
 #[path = "../tools/open_editor.rs"]
 mod editor;
 
-pub fn run() {
-    println!("Trying to find ticket number");
-
+fn get_ticket_number_from_branch_name() -> String {
     let output = String::from_utf8(git_wrapper::get_branch_name().stdout)
         .expect("Could not convert branch name to UTF-8");
 
@@ -29,12 +27,22 @@ pub fn run() {
 
     let ticket_regex = Regex::new(r"(next-\d+)").unwrap();
 
-    let ticket_number = ticket_regex
+    return ticket_regex
         .find(&branch_name)
         .expect("Could not parse ticket from current branch name")
-        .as_str();
+        .as_str()
+        .into();
+}
 
-    let file_content_regex = RegexBuilder::new(branch_name)
+pub fn run(id: Option<String>) {
+    println!("Trying to find ticket number");
+
+    let ticket_number = match id {
+        Some(id) => id,
+        None => get_ticket_number_from_branch_name(),
+    };
+
+    let file_content_regex = RegexBuilder::new(&ticket_number)
         .case_insensitive(true)
         .build()
         .expect("Could not create regex from ticket number");

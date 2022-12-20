@@ -1,5 +1,5 @@
-use std::process;
 use dialoguer::{theme::ColorfulTheme, Confirm, Editor, Input};
+use std::process;
 
 #[path = "../tools/confy_wrapper.rs"]
 mod confy_wrapper;

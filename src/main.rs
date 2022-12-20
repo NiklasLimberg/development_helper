@@ -32,7 +32,6 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    
     /// Changes the config of the tool
     Setup {},
 
@@ -47,7 +46,11 @@ enum Commands {
         title: String,
     },
 
-    EditChangelog {}
+    EditChangelog {
+        /// Ticket id
+        #[clap(short, long, action)]
+        id: Option<String>,
+    },
 }
 
 fn main() {
@@ -61,10 +64,10 @@ fn main() {
         println!("Debug mode is on");
     }
 
-    match &cli.command {
-        Some(Commands::Setup {  }) => setup::run(),
+    match cli.command {
+        Some(Commands::Setup {}) => setup::run(),
         Some(Commands::Create { id, title }) => prepare_pr::run(id, title),
-        Some(Commands::EditChangelog {  }) => open_changelog::run(),
+        Some(Commands::EditChangelog { id }) => open_changelog::run(id),
         None => {}
     }
 }

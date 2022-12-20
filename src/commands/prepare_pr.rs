@@ -14,7 +14,7 @@ mod git_wrapper;
 #[path = "../tools/open_editor.rs"]
 mod editor;
 
-pub fn run(issue_key: &String, title: &String) {
+pub fn run(issue_key: String, title: String) {
     let id_regex = Regex::new(r"NEXT-\d*").unwrap();
 
     if !id_regex.is_match(&issue_key) {
@@ -54,7 +54,7 @@ pub fn run(issue_key: &String, title: &String) {
     };
 
     if write_changelog {
-        fs::write(&changelog_path, get_changelog_content(title, issue_key))
+        fs::write(&changelog_path, get_changelog_content(&title, &issue_key))
             .expect("Unable to write changelog file");
 
         editor::open(&changelog_path);
